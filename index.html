@@ -52,7 +52,7 @@
   <section id="resultado" style="margin-top:20px;"></section>
 </main>
 
-<script>
+  <script>
 window.addEventListener("DOMContentLoaded", () => {
 
   const form = document.getElementById("form");
@@ -61,7 +61,6 @@ window.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Obtener datos del form
     const formData = new FormData(form);
     const data = {};
 
@@ -70,7 +69,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     try {
-      const res = await fetch("http://127.0.0.1:5000/api/calculate", {
+      const res = await fetch("https://calculadora-huella-de-carbono-seven.vercel.app/api/calculate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -80,7 +79,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
       const json = await res.json();
 
-      // Mostrar resultados
       resultado.innerHTML = `
         <article>
           <h2>Resultado</h2>

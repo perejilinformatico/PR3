@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora CO2</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body>
+
+<main class="container">
+  <h1>🌍 Calculadora de Huella de Carbono</h1>
+
+  <form id="form">
+    <label>
+      Km en auto por semana
+      <input type="number" name="auto_km_semana" value="0">
+    </label>
+
+    <label>
+      Vuelos cortos
+      <input type="number" name="vuelos_cortos" value="0">
+    </label>
+
+    <label>
+      Vuelos largos
+      <input type="number" name="vuelos_largos" value="0">
+    </label>
+
+    <label>
+      Electricidad (kWh/mes)
+      <input type="number" name="electricidad" value="0">
+    </label>
+
+    <label>
+      Gas (m3/mes)
+      <input type="number" name="gas_m3" value="0">
+    </label>
+
+    <label>
+      Carne roja (porciones/semana)
+      <input type="number" name="carne_roja" value="0">
+    </label>
+
+    <label>
+      Pollo (porciones/semana)
+      <input type="number" name="pollo" value="0">
+    </label>
+
+    <button type="submit">Calcular</button>
+  </form>
+
+  <section id="resultado" style="margin-top:20px;"></section>
+</main>
+
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+
+  const form = document.getElementById("form");
+  const resultado = document.getElementById("resultado");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Obtener datos del form
+    const formData = new FormData(form);
+    const data = {};
+
+    formData.forEach((value, key) => {
+      data[key] = Number(value);
+    });
+
+    try {
+      const res = await fetch("http://127.0.0.1:5000/api/calculate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      const json = await res.json();
+
+      // Mostrar resultados
+      resultado.innerHTML = `
+        <article>
+          <h2>Resultado</h2>
+          <p><strong>Total:</strong> ${json.total} toneladas CO₂</p>
+          <p><strong>Nivel:</strong> ${json.nivel.label}</p>
+          <p>${json.nivel.desc}</p>
+        </article>
+      `;
+
+    } catch (error) {
+      resultado.innerHTML = `<p>Error: ${error}</p>`;
+    }
+  });
+
+});
+</script>
+
+</body>
+</html>
